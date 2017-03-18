@@ -12,27 +12,56 @@ namespace vidly.Controllers
     {
         //
         // GET: /Movie/
-        public ActionResult Index()
-        {
-            var Movie = new Movie()
-            {
-                Name = "RockStar"
-            };
+        //public ActionResult Index()
+        //{
+        //    var Movie = new Movie()
+        //    {
+        //        Name = "RockStar"
+        //    };
 
+        //    var Customer = new List<Customer>
+        //    {
+        //        new Customer{Name="Rohit1"},
+        //        new Customer{Name="Rohit2"}
+
+        //    };
+        //    var ViewModel = new RandomMovieViewModel()
+        //    {
+        //        Movie = Movie,
+        //        Customers = Customer
+
+        //    };
+        //   //foreach(var Customer in ViewModel. )
+        //    return View(ViewModel);
+        //}
+        public ViewResult Index()
+        {
+            var Movie = GetMovies();
+            return View(Movie);
+        }
+        private IEnumerable<Movie> GetMovies()
+        {
+            return new List<Movie>
+            {
+                new Movie{Id=1,Name="RockStar"},
+                new Movie{Id=2,Name="Rab ne banadi jodi"}
+            };
+           
+        }
+        public ActionResult Random()
+        {
+            var movie = new Movie() { Name = "Rockstar" };
             var Customer = new List<Customer>
             {
                 new Customer{Name="Rohit1"},
                 new Customer{Name="Rohit2"}
-
             };
-            var ViewModel = new RandomMovieViewModel()
+            var viewModel = new RandomMovieViewModel
             {
-                Movie = Movie,
+                Movie = movie,
                 Customers = Customer
-
             };
-           //foreach(var Customer in ViewModel. )
-            return View(ViewModel);
+            return View(viewModel);
         }
 	}
 }
