@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 using vidly.Models;
 using vidly.ViewModel;
 
@@ -12,42 +13,37 @@ namespace vidly.Controllers
     {
         //
         // GET: /Movie/
-        //public ActionResult Index()
-        //{
-        //    var Movie = new Movie()
-        //    {
-        //        Name = "RockStar"
-        //    };
-
-        //    var Customer = new List<Customer>
-        //    {
-        //        new Customer{Name="Rohit1"},
-        //        new Customer{Name="Rohit2"}
-
-        //    };
-        //    var ViewModel = new RandomMovieViewModel()
-        //    {
-        //        Movie = Movie,
-        //        Customers = Customer
-
-        //    };
-        //   //foreach(var Customer in ViewModel. )
-        //    return View(ViewModel);
-        //}
+        private ApplicationDbContext _context;
+        public MovieController()
+        {
+            _context = new ApplicationDbContext();
+        }
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
         public ViewResult Index()
         {
-            var Movie = GetMovies();
-            return View(Movie);
+            var Movies = _context.Movie.Include(m => m.Genre).ToList();
+            return View(Movies);
         }
-        private IEnumerable<Movie> GetMovies()
+        public ActionResult Details(int Id)
         {
-            return new List<Movie>
-            {
-                new Movie{Id=1,Name="RockStar"},
-                new Movie{Id=2,Name="Rab ne banadi jodi"}
-            };
-           
+            var Movie = _context.Movie.Include(m => m.Genre).SingleOrDefault(m => m.Id == Id);
+            if (Movie == null)
+                return HttpNotFound();
+            return View(Movie);
+
         }
+        //private IEnumerable<Movie> GetMovies()
+        //{
+        //    return new List<Movie>
+        //    {
+        //        new Movie{Id=1,Name="RockStar"},
+        //        new Movie{Id=2,Name="Rab ne banadi jodi"}
+        //    };
+           
+        //}
         public ActionResult Random()
         {
             var movie = new Movie() { Name = "Rockstar" };
